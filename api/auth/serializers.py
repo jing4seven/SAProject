@@ -38,7 +38,6 @@ class api_auth_serializer(serializers.ModelSerializer):
 		return auth_hmac(**attrs)
 
 	def validate(self, attrs):
-		# if not re.match(r'^([a-zA-Z|\ |0-9]){5,50}$', attrs['name']):
-		# 	raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
-		
+		if not re.match(r'^([a-zA-Z|\ |0-9]){5,50}$', attrs['name']):
+			raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
 		return attrs
