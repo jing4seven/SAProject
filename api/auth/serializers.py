@@ -25,7 +25,7 @@ class api_auth_serializer(serializers.ModelSerializer):
 		If this method not defined, then deserializing data will simply return a dictionary of items.
 		When invoke "serializer.save", 'dict' object has no attribute 'save' error will be raised.
 		'''
-		if instance:
+		if not instance is None:
 			instance.name = attrs.get('name', instance.name)
 			instance.description = attrs.get('description', instance.description)
 			instance.client_id = attrs.get('client_id', instance.client_id)
@@ -38,7 +38,7 @@ class api_auth_serializer(serializers.ModelSerializer):
 		return auth_hmac(**attrs)
 
 	def validate(self, attrs):
-		if not re.match(r'^([a-zA-Z|\ |0-9]){5,50}$', attrs['name']):
-			raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
-
+		# if not re.match(r'^([a-zA-Z|\ |0-9]){5,50}$', attrs['name']):
+		# 	raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
+		
 		return attrs
