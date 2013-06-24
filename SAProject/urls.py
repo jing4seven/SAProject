@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'SAProject.views.home', name='home'),
     url(r'^(?i)api-auth/', include('api.auth.urls')), 
-    url(r'^(?i)user/', include('api.secure.urls')),
+    url(r'^(?i)secure/', include('api.secure.urls')),
 )

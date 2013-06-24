@@ -13,17 +13,18 @@ class user_serializer(serializers.ModelSerializer):
 	disable = serializers.BooleanField()
 	age = serializers.IntegerField(required=False, read_only=True)
 	birthday = serializers.DateTimeField(required=False)
-	avatar = serializers.CharField()
+	# ToDo: Make this field available.
+	#avatar = serializers.CharField()
 	last_login = serializers.DateTimeField(required=False, read_only=True)
 	date_join = serializers.DateTimeField(required=False, read_only=True)
 	is_supperuser = serializers.BooleanField(required=False, read_only=True)
 	is_stuff = serializers.BooleanField(required=False, read_only=True)
 	update_time = serializers.DateTimeField(required=False, read_only=True)
-	last_edited_by = serializers.CharField(required=False, read_only=True)
+	last_edited_by = serializers.CharField()
 
 	class Meta:
 		model = user
-		fields = ('pk', 'full_name', 'username', 'password', 'first_name', 'last_name', 'disable',  'birthday', 'last_login', 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
+		fields = ('pk', 'full_name', 'username', 'password', 'first_name', 'last_name', 'disable',  'birthday', 'avatar', 'last_login', 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
 		ordering = ('-last_join', )
 
 	def restore_object(self, attrs, instance=None):
@@ -33,7 +34,7 @@ class user_serializer(serializers.ModelSerializer):
 			instance.password = attrs.get('password', instance.password)
 			instance.first_name = attrs.get('first_name', instance.first_name)
 			instance.last_name = attrs.get('last_name', instance.last_name)
-			# instance.age = attrs.get('age', instance.age)
+			instance.age = attrs.get('age', instance.age)
 			instance.birthday = attrs.get('birthday', instance.birthday)
 			instance.avatar = attrs.get('avatar', instance.birthday)
 			instance.last_login = attrs.get('last_login', instance.last_login)
@@ -50,4 +51,41 @@ class user_serializer(serializers.ModelSerializer):
 		if not validation.check_char_basic(str.rstrip(str(attrs['username'])), 5, 50):
 			raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
 		return attrs
+
+class role_serializer(serializers.ModelSerializer):
+	pk = serializers.Field()
+	name = serializers.CharField()
+	description = serializers.CharField(required=False)
+
+	class Meta:
+		model = role
+		fields = ('pk', 'name', 'description')
+
+
+class content_type_serializer(serializers.ModelSerializer):
+	pk = serializers.Field()
+	name = serializers.CharField()
+	app_label = serializers.CharField()
+	model = serializers.CharField()
+
+	class Meta:
+		model = content_type
+		fields = ('pk', 'name', 'app_label', 'model')
+
+	def __unicode__(self):
+		return '%d: %s, %s, %s' % (self.pk, self.name, self.app_lable, self.model)
+
+
+class permission_serializer(serializers.ModelSerializer):
+	pk = serializers.Field()
+	name = serializers.CharField()
+	content_type = serializers.RelatedField(many=False)
+	codename = serializers.CharField()
+
+	class Meta:
+		model = permission
+		fields = ('pk', 'name', 'content_type', 'codename')
+
+
+
 

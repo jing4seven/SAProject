@@ -46,6 +46,7 @@ def generate_radom_list(length=2, count=6):
 
 	return arr
 
-def gen_password(vis_pwd, salt):
+def gen_password(vis_pwd, salt=None):
 	salt = salt or settings.SECRET_KEY
+	print salt
 	return hmac.new(salt, vis_pwd, hashlib.sha1).hexdigest()

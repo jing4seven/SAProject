@@ -28,30 +28,12 @@ class user(models.Model):
 		db_table = 'sa_t_user'
 
 	def save(self, *args, **kwargs):
-		first_name = ""
-		last_name = ""
-		birthday = ""
-		password = ""
-		for name, value in kwargs.iteritems():
-			if name == 'first_name':
-				first_name = value
-			elif name == 'last_name':
-				last_name = value
-			elif name == 'birthday':
-				birthday = value
-			elif name == 'password':
-				password = value
-
-		self.full_name = "%s %s" % (first_name, last_name)
-		self.password = hashtools.gen_password(vis_pwd=password, salt="")
 		self.date_join = timezone.now()
-		try:
-			self.birthday = datetime.strptime(birthday, "%m/%d/%y")
-		except:
-			self.birthday = datetime.now()
-
+		self.full_name = "%s %s" % (self.first_name, self.last_name)
+		self.password = hashtools.gen_password(vis_pwd=self.password)
+		self.date_join = timezone.now()
+		
 		super(user, self).save(*args, **kwargs)
-
 
 class content_type(models.Model):
 	name = models.CharField(max_length=100)
