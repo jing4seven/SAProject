@@ -1,4 +1,4 @@
-from django.db.models.fields import PositiveIntegerField, BigIntegerField
+from django.db.models.fields import PositiveIntegerField, BigIntegerField, AutoField, related
 
 class PositiveBigIntegerField(PositiveIntegerField):
     """Represents MySQL's unsigned BIGINT data type (works with MySQL only!)"""
@@ -22,4 +22,12 @@ class PositiveBigIntegerAutoField(BigIntegerField):
     def db_type(self, connection):
         if 'mysql' in connection.__class__.__module__:
             return 'bigint UNSIGNED AUTO_INCREMENT'
-        return super(BigAutoField, self).db_type(connection)
+        return super(PositiveBigAutoField, self).db_type(connection)
+
+# class NewForeignKey(related.ForeignKey):
+#     def db_type(self, connection):
+#         rel_field = self.rel.get_related_field()
+#         if isinstance(rel_field, PositiveBigIntegerAutoField):
+#             return PositiveBigIntegerField().db_type(connection=connection)
+#         else:
+#             return rel_field.db_type(connection=connection)

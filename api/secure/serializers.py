@@ -1,6 +1,6 @@
 import re
 from rest_framework import serializers
-from api.secure.model import user, role, permission, content_type, user_permission, role_permission, user_role
+from api.secure.models import user, role, permission, content_type, user_permission, role_permission, user_role
 from lib import validation
 
 class user_serializer(serializers.ModelSerializer):
@@ -8,11 +8,11 @@ class user_serializer(serializers.ModelSerializer):
 	full_name = serializers.CharField(required=False, read_only=True)
 	username = serializers.CharField()
 	password = serializers.CharField()
-	first_name = serializer.CharField()
+	first_name = serializers.CharField()
 	last_name = serializers.CharField()
 	disable = serializers.BooleanField()
-	age = serializers.PositiveSmallIntegerField(required=False, read_only=True)
-	birthday = serializers.DateTimeField()
+	age = serializers.IntegerField(required=False, read_only=True)
+	birthday = serializers.DateTimeField(required=False)
 	avatar = serializers.CharField()
 	last_login = serializers.DateTimeField(required=False, read_only=True)
 	date_join = serializers.DateTimeField(required=False, read_only=True)
@@ -23,7 +23,7 @@ class user_serializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = user
-		fields = ('pk', 'full_name', 'username', 'password', 'first_name', 'last_name', 'disable', 'age', 'birthday', 'last_login', 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
+		fields = ('pk', 'full_name', 'username', 'password', 'first_name', 'last_name', 'disable',  'birthday', 'last_login', 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
 		ordering = ('-last_join', )
 
 	def restore_object(self, attrs, instance=None):
@@ -33,7 +33,7 @@ class user_serializer(serializers.ModelSerializer):
 			instance.password = attrs.get('password', instance.password)
 			instance.first_name = attrs.get('first_name', instance.first_name)
 			instance.last_name = attrs.get('last_name', instance.last_name)
-			instance.age = attrs.get('age', instance.age)
+			# instance.age = attrs.get('age', instance.age)
 			instance.birthday = attrs.get('birthday', instance.birthday)
 			instance.avatar = attrs.get('avatar', instance.birthday)
 			instance.last_login = attrs.get('last_login', instance.last_login)
@@ -47,7 +47,7 @@ class user_serializer(serializers.ModelSerializer):
 		return user(**attrs)
 
 	def validate(self, attrs):
-		if not validation.check_char_basic(str.rstrip(attrs['name']), 5, 50):
+		if not validation.check_char_basic(str.rstrip(str(attrs['username'])), 5, 50):
 			raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
 		return attrs
 

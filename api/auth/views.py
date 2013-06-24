@@ -7,7 +7,7 @@ from api.auth.authentication import api_auth
 from api.auth.models import auth_hmac
 from api.auth.serializers import api_auth_serializer
 
-class SiteClient(ListModelMixin, 
+class site_client(ListModelMixin, 
 				CreateModelMixin, 
 				GenericAPIView, 
 				UpdateModelMixin, 

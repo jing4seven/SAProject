@@ -1,12 +1,16 @@
+import hmac
 import random
 import hashlib
 import base64
+from django.conf import settings
 
-def gen_random_key():
+def gen_random_key(bit = 128):
 	'''
 	Generate a hash key.
+
+	bit = 128, 256
 	'''
-	random_str = str(random.getrandbits(256))
+	random_str = str(random.getrandbits(128))
 	key = base64.b64encode(hashlib.sha256(random_str).digest(), random.choice(generate_radom_list())).rstrip('==')
 	return key
 
@@ -41,3 +45,7 @@ def generate_radom_list(length=2, count=6):
 		i=i+1
 
 	return arr
+
+def gen_password(vis_pwd, salt):
+	salt = salt or settings.SECRET_KEY
+	return hmac.new(salt, vis_pwd, hashlib.sha1).hexdigest()

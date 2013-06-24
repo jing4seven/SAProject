@@ -1,19 +1,20 @@
+from datetime import datetime
 from django.db import models
+from django.utils import timezone
 from lib.model import PositiveBigIntegerAutoField
-from django.core.files import images
+from lib import hashtools
 
 class user(models.Model):
-	id = PositiveBigIntegerAutoField(primary_key=True)
-	full_name = models.CharField(max_length=250)
+	full_name = models.CharField(max_length=250, db_index=True)
 	email_address = models.CharField(max_length=250)
-	username = models.CharField(max_length=250)
+	username = models.CharField(max_length=250, db_index=True, unique=True)
 	password = models.CharField(max_length=128)
 	first_name = models.CharField(max_length=50)
 	last_name = models.CharField(max_length=50)
 	disable = models.BooleanField(default=False)
 	birthday = models.DateTimeField(null=True)
 	avatar = models.ImageField(upload_to='user/avatar', null=True)
-	last_login = models.DateTimeField()
+	last_login = models.DateTimeField(null=True)
 	date_join = models.DateTimeField()
 	is_supperuser = models.BooleanField(default=False)
 	is_stuff = models.BooleanField(default=False)
@@ -26,6 +27,32 @@ class user(models.Model):
 	class Meta:
 		db_table = 'sa_t_user'
 
+	def save(self, *args, **kwargs):
+		first_name = ""
+		last_name = ""
+		birthday = ""
+		password = ""
+		for name, value in kwargs.iteritems():
+			if name == 'first_name':
+				first_name = value
+			elif name == 'last_name':
+				last_name = value
+			elif name == 'birthday':
+				birthday = value
+			elif name == 'password':
+				password = value
+
+		self.full_name = "%s %s" % (first_name, last_name)
+		self.password = hashtools.gen_password(vis_pwd=password, salt="")
+		self.date_join = timezone.now()
+		try:
+			self.birthday = datetime.strptime(birthday, "%m/%d/%y")
+		except:
+			self.birthday = datetime.now()
+
+		super(user, self).save(*args, **kwargs)
+
+
 class content_type(models.Model):
 	name = models.CharField(max_length=100)
 	app_label = models.CharField(max_length=100)
@@ -34,8 +61,12 @@ class content_type(models.Model):
 	def __unicode__(self):
 		return self.pk + "_" + self.name
 
+	class Meta:
+		db_table = 'sa_t_content_type'
+
+
 class permission(models.Model):
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=100, db_index=True, unique=True)
 	content_type = models.ForeignKey(content_type)
 	code_name = models.CharField(max_length=100)
 
@@ -53,7 +84,7 @@ class user_permission(models.Model):
 		db_table = 'sa_t_user_permission'
 
 class role(models.Model):
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=100, db_index=True, unique=True)
 	description = models.TextField(max_length=10000)
 
 	class Meta:
