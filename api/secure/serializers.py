@@ -1,30 +1,25 @@
 import re
+from datetime import datetime
 from rest_framework import serializers
-from api.secure.models import user, role, permission, content_type, user_permission, role_permission, user_role
+from api.secure.models import user, role, permission, project_user_role, endpoint, role_permission
 from lib import validation
 
 class user_serializer(serializers.ModelSerializer):
 	pk = serializers.Field()
 	full_name = serializers.CharField(required=False, read_only=True)
-	username = serializers.CharField()
-	password = serializers.CharField()
-	first_name = serializers.CharField()
-	last_name = serializers.CharField()
-	disable = serializers.BooleanField()
-	age = serializers.IntegerField(required=False, read_only=True)
+	age = serializers.Field(source="get_age")
 	birthday = serializers.DateTimeField(required=False)
 	# ToDo: Make this field available.
-	#avatar = serializers.CharField()
+	# avatar = serializers.CharField(required=False, blank=True)
 	last_login = serializers.DateTimeField(required=False, read_only=True)
 	date_join = serializers.DateTimeField(required=False, read_only=True)
 	is_supperuser = serializers.BooleanField(required=False, read_only=True)
 	is_stuff = serializers.BooleanField(required=False, read_only=True)
 	update_time = serializers.DateTimeField(required=False, read_only=True)
-	last_edited_by = serializers.CharField()
 
 	class Meta:
 		model = user
-		fields = ('pk', 'full_name', 'username', 'password', 'first_name', 'last_name', 'disable',  'birthday', 'avatar', 'last_login', 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
+		fields = ('pk', 'full_name', 'username', 'password', 'first_name', 'last_name', 'disable', 'age', 'birthday',  'last_login', 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
 		ordering = ('-last_join', )
 
 	def restore_object(self, attrs, instance=None):
@@ -34,9 +29,9 @@ class user_serializer(serializers.ModelSerializer):
 			instance.password = attrs.get('password', instance.password)
 			instance.first_name = attrs.get('first_name', instance.first_name)
 			instance.last_name = attrs.get('last_name', instance.last_name)
-			instance.age = attrs.get('age', instance.age)
 			instance.birthday = attrs.get('birthday', instance.birthday)
-			instance.avatar = attrs.get('avatar', instance.birthday)
+			instance.age = attrs.get('birthday', instance.birthday)
+			instance.avatar = attrs.get('avatar', instance.avatar)
 			instance.last_login = attrs.get('last_login', instance.last_login)
 			instance.date_join = attrs.get('date_join', instance.date_join)
 			instance.is_supperuser = attrs.get('is_supperuser', instance.is_supperuser)
@@ -52,6 +47,25 @@ class user_serializer(serializers.ModelSerializer):
 			raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
 		return attrs
 
+class endpoint(serializers.ModelSerializer):
+	pk = serializers.Field()
+	name = serializers.CharField()
+	codename = serializers.CharField()
+
+	class Meta:
+		model = endpoint
+		fields = ('pk', 'name', 'codename')
+
+class permission_serializer(serializers.ModelSerializer):
+	pk = serializers.Field()
+	name = serializers.CharField()
+	endpoint = serializers.RelatedField(many=False)
+	GPPD = serializers.IntegerField()
+
+	class Meta:
+		model = permission
+		fields = ('pk', 'name', 'endpoint', 'GPPD')
+
 class role_serializer(serializers.ModelSerializer):
 	pk = serializers.Field()
 	name = serializers.CharField()
@@ -62,30 +76,18 @@ class role_serializer(serializers.ModelSerializer):
 		fields = ('pk', 'name', 'description')
 
 
-class content_type_serializer(serializers.ModelSerializer):
+class role_permission(serializers.ModelSerializer):
 	pk = serializers.Field()
-	name = serializers.CharField()
-	app_label = serializers.CharField()
-	model = serializers.CharField()
+	role = serializers.RelatedField(many=False)
+	permission = serializers.RelatedField(many=False)
+
+
+class project_user_role(serializers.ModelSerializer):
+	project = serializers.RelatedField(many=False)
+	user = serializers.RelatedField(many=False)
+	role = serializers.RelatedField(many=False)
 
 	class Meta:
-		model = content_type
-		fields = ('pk', 'name', 'app_label', 'model')
-
-	def __unicode__(self):
-		return '%d: %s, %s, %s' % (self.pk, self.name, self.app_lable, self.model)
-
-
-class permission_serializer(serializers.ModelSerializer):
-	pk = serializers.Field()
-	name = serializers.CharField()
-	content_type = serializers.RelatedField(many=False)
-	codename = serializers.CharField()
-
-	class Meta:
-		model = permission
-		fields = ('pk', 'name', 'content_type', 'codename')
-
-
-
+		model = project_user_role
+		fields = ('pk', 'project', 'user', 'role')
 
