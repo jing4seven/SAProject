@@ -1,7 +1,7 @@
 import re
 from django.utils import timezone
 from rest_framework import serializers
-from api.auth.models import auth_hmac
+from api.auth.models import site_client as site_client_model
 
 class api_auth_serializer(serializers.ModelSerializer):
 	'''
@@ -14,7 +14,7 @@ class api_auth_serializer(serializers.ModelSerializer):
 	enable = serializers.BooleanField(required=False)
 
 	class Meta:
-		model = auth_hmac
+		model = site_client_model
 		fields = ('pk', 'name', 'description', 'client_id', 'security_key', 'scope', 'created_time')
 		ordering = ('created_time',)
 
@@ -35,9 +35,9 @@ class api_auth_serializer(serializers.ModelSerializer):
 			instance.created_time = attrs.get('created_time', instance.created_time)
 			return instance
 
-		return auth_hmac(**attrs)
+		return site_client_model(**attrs)
 
 	def validate(self, attrs):
 		if not re.match(r'^([a-zA-Z|\ |0-9]){5,50}$', attrs['name']):
-			raise serializers.ValidationError("'name' filed should only be character, numbers and blank which between 5 - 50 long.")
+			raise serializers.ValidationError("'name' filed should only be character, numbers or blank which between 5 - 50 long.")
 		return attrs

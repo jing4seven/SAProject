@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from lib import hashtools
+from api.auth.models import site_client as site_client_model
 
 class user(models.Model):
+	site_client = models.ForeignKey('auth.site_client')
 	full_name = models.CharField(max_length=250, db_index=True)
 	email_address = models.CharField(max_length=250)
 	username = models.CharField(max_length=250, db_index=True, unique=True)
@@ -17,7 +19,7 @@ class user(models.Model):
 	is_supperuser = models.BooleanField(default=False)
 	is_stuff = models.BooleanField(default=False)
 	update_time = models.DateTimeField(auto_now_add=True)
-	last_edited_by = models.CharField("static username", max_length=250)
+	last_edited_by = models.CharField(max_length=250)
 
 	def __unicode__(self):
 		return self.username
@@ -34,13 +36,29 @@ class user(models.Model):
 		else:
 			return 0
 
+	def get_client_id(self):
+		return self.client.client_id
+
 	def save(self, *args, **kwargs):
 		self.date_join = timezone.now()
 		self.full_name = "%s %s" % (self.first_name, self.last_name)
 		self.password = hashtools.gen_password(vis_pwd=self.password)
 		self.date_join = timezone.now()
-		
+		self.site_client = site_client_model.objects.get(client_id = self.client_id)
+
 		super(user, self).save(*args, **kwargs)
+
+
+# class AnonymousUser(object):
+#     id = None
+#     pk = None
+#     username = ''
+#     is_staff = False
+#     is_active = False
+#     is_superuser = False
+#     _groups = EmptyManager()
+#     _user_permissions = EmptyManager()
+
 
 class endpoint(models.Model):
 	name = models.CharField(max_length=100, db_index=True, unique=True)

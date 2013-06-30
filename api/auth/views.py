@@ -4,7 +4,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.response import Response
 from api.auth.authentication import api_auth
-from api.auth.models import auth_hmac
+from api.auth.models import site_client as site_client_model
 from api.auth.serializers import api_auth_serializer
 
 class site_client(ListModelMixin, 
@@ -20,7 +20,7 @@ class site_client(ListModelMixin,
 	'''
 	# authentication_classes = (api_auth, )
 	# permission_classes((api_permission,)
-	queryset = auth_hmac.objects.all()
+	queryset = site_client_model.objects.all()
 	serializer_class = api_auth_serializer
 
 	def get(self, request, pk=0, format='json'):
@@ -57,6 +57,6 @@ class site_client(ListModelMixin,
 
 	def _set_queryset(self, pk):
 		try:
-			queryset = auth_hmac.objects.get(pk=pk)
-		except auth_hmac.DoesNotExist:
+			queryset = site_client_model.objects.get(pk=pk)
+		except site_client_model.DoesNotExist:
 			raise Http404

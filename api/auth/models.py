@@ -1,7 +1,9 @@
 from django.db import models
 from lib import hashtools
 
-class auth_hmac(models.Model):
+# ToDo: Override manager for implementing cache.
+
+class site_client(models.Model):
 	name = models.CharField(max_length=50)
 	description = models.TextField(blank=True, null=True, default="")
 	client_id = models.CharField(max_length=255, db_index=True, unique=True)
@@ -21,5 +23,5 @@ class auth_hmac(models.Model):
 		c_id = hashtools.gen_random_key()
 		self.client_id = c_id
 		self.security_key = hashtools.gen_random_key_by_given_key(c_id)
-
-		super(auth_hmac, self).save(*args, **kwargs)
+		
+		super(site_client, self).save(*args, **kwargs)
