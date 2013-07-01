@@ -11,4 +11,5 @@ urlpatterns = patterns('',
 
     url(r'^(?i)api/', include('api.auth.urls')),
     url(r'^(?i)api/secure/', include('api.secure.urls')),
+    url(r'^(?i)', include('api.project.urls')),
 )

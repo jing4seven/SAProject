@@ -1,11 +1,29 @@
 from django.db import models
 from django.utils import timezone
 
-from lib.model import PositiveBigIntegerField, PositiveBigIntegerAutoField
+from api.secure.models import user
+
+
+class project(models.Model):
+	name = models.CharField("project short name use for navigation", max_length=50)
+	alias = models.CharField("full name of project", max_length=250)
+	owner = models.ForeignKey(user)
+	description = models.TextField(blank=True, null=True)	
+	is_private = models.BooleanField("private project only visible for owner and memebers of his/her group.", blank=True)
+	update_time = models.DateTimeField(default=timezone.now(), blank=True)
+	last_edited_by = models.CharField(max_length=250, blank=True)
+
+	def __unicode__(self):
+		return self.alias
+
+	class Meta:
+		db_table = 'sa_t_project'
+
 
 class project_status(models.Model):
-	# id = PositiveBigIntegerAutoField(private_key=True)
-	name = models.CharField(max_length=50)
+	name = models.CharField("status name of project", max_length=50)
+	project = models.ForeignKey(project, blank=True)
+	is_current = models.BooleanField("the project current status or not", default=False)
 	description = models.TextField(blank=True, null=True)
 
 	def __unicode__(self):
@@ -14,22 +32,6 @@ class project_status(models.Model):
 	class Meta:
 		db_table = 'sa_t_project_status'
 
-
-class project(models.Model):
-	name = models.CharField("project short name use for navigation", max_length=50)
-	alias = models.CharField("full name of project", max_length=250)
-	owner = models.ForeignKey('secure.user')
-	description = models.TextField(blank=True, null=True)
-	status = models.ForeignKey('project_status', blank=True)
-	is_private = models.BooleanField("private project only visible for owner and memebers of his/her group.", blank=True)
-	update_time = models.DateTimeField(default=timezone.now(), blank=True)
-	last_eidted_by = models.CharField(max_length=250, blank=True)
-
-	def __unicode__(self):
-		return self.alias
-
-	class Meta:
-		db_table = 'sa_t_project'
 
 
 class work_item_group(models.Model):
