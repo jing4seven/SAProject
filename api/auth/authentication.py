@@ -19,6 +19,8 @@ class api_auth(authentication.BaseAuthentication):
 
 	HTTP_AUTHORIZATION: ApiKey none:[signature]
 	X_SAPROJECT_CLIENT_ID: [client_id]
+
+	Ps: 'X_SAPROJECT_CLIENT_ID' can be setted in django settings.
 	'''
 	def authenticate(self, request):
 		auth_header = authentication.get_authorization_header(request)
