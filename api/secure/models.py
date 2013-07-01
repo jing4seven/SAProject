@@ -37,15 +37,14 @@ class user(models.Model):
 			return 0
 
 	def get_client_id(self):
-		return self.client.client_id
+		return self.site_client.client_id
 
 	def save(self, *args, **kwargs):
 		self.date_join = timezone.now()
 		self.full_name = "%s %s" % (self.first_name, self.last_name)
 		self.password = hashtools.gen_password(vis_pwd=self.password)
 		self.date_join = timezone.now()
-		self.site_client = site_client_model.objects.get(client_id = self.client_id)
-
+		
 		super(user, self).save(*args, **kwargs)
 
 

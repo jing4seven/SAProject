@@ -17,7 +17,7 @@ class project(models.Model):
 		return self.alias
 
 	class Meta:
-		db_table = 'sa_t_project'
+		db_table = 'sa_t_projects'
 
 
 class project_status(models.Model):
@@ -32,25 +32,70 @@ class project_status(models.Model):
 	class Meta:
 		db_table = 'sa_t_project_status'
 
+class release(models.Model):
+	name = models.CharField('release name', max_length=250)
+	project = models.ForeignKey(project, blank=False)
+	description = models.TextField('description of the release', blank=True, null=True)
+	deadline = models.DateTimeField(blank=True, null=True)
+	update_time = models.DateTimeField(default=timezone.now(), blank=True)
+	last_edited_by = models.CharField(max_length=250, blank=True)
+	
+	def __unicode__(self):
+		return self.name
+	
+	class Meta:
+		db_table = 'sa_t_releases'
+		
+class release_status(models.Model):
+	name = models.CharField('release status name', max_length=50)
+	description = models.TextField(blank=True, null=True)
+	release = models.ForeignKey(release, blank=True)
+	is_current = models.BooleanField('the release current status or not', default=False)
+	
+	def __unicode__(self):
+		return self.name
+	
+	class Meta:
+		db_table = 'sa_t_release_status'
 
 
 class work_item_group(models.Model):
-	project = models.ForeignKey('project')
-	name = models.CharField("work item group name", max_length=50)
+	project = models.ForeignKey(project, blank=False)
 	parent = models.ForeignKey('self', null=True)
+	name = models.CharField('name of the work item group', max_length=250)
 	description = models.TextField(blank=True, null=True)
-	importance = models.PositiveSmallIntegerField(blank=True, default=0)
-	time_logged = models.PositiveIntegerField(blank=True, default=0)
-	initial_estimate = models.PositiveIntegerField(blank=True)
-	how_to_demo = models.TextField()
+	importance = models.SmallIntegerField(default=0)
+	time_logged = models.IntegerField(default=0)
+	initial_estimate = models.IntegerField(default=0)
+	#how_to_demo = models.BigIntegerField(default=0)
 	update_time = models.DateTimeField(default=timezone.now(), blank=True)
-	last_eidted_by = models.CharField(max_length=250, blank=True)
-
+	last_edited_by = models.CharField(max_length=250, blank=True)
+	
 	def __unicode__(self):
 		return self.name
-
+	
 	class Meta:
 		db_table = 'sa_t_work_item_groups'
+		
+
+
+# class work_item_group(models.Model):
+# 	project = models.ForeignKey('project')
+# 	name = models.CharField("work item group name", max_length=50)
+# 	parent = models.ForeignKey('self', null=True)
+# 	description = models.TextField(blank=True, null=True)
+# 	importance = models.PositiveSmallIntegerField(blank=True, default=0)
+# 	time_logged = models.PositiveIntegerField(blank=True, default=0)
+# 	initial_estimate = models.PositiveIntegerField(blank=True)
+# 	how_to_demo = models.TextField()
+# 	update_time = models.DateTimeField(default=timezone.now(), blank=True)
+# 	last_eidted_by = models.CharField(max_length=250, blank=True)
+# 
+# 	def __unicode__(self):
+# 		return self.name
+# 
+# 	class Meta:
+# 		db_table = 'sa_t_work_item_groups'
 
 
 # class work_item_group_hierachy(models.Model):
@@ -61,10 +106,10 @@ class work_item_group(models.Model):
 # 		#unique_together = (("parent", "childs"),)
 # 		db_table = 'sa_t_work_item_group_hierachy'
 
-class work_item_status(models.Model):
-	name = name = models.CharField(max_length=50)
-	description = models.TextField(blank=True, null=True)
-	creator = models.ForeignKey('secure.user', null=True)
+# class work_item_status(models.Model):
+# 	name = name = models.CharField(max_length=50)
+# 	description = models.TextField(blank=True, null=True)
+# 	creator = models.ForeignKey('secure.user', null=True)
 
 
 # class work_item(models.Model):
