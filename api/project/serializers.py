@@ -40,7 +40,7 @@ class project_serializer(serializers.Serializer):
 class project_status_serializer(serializers.Serializer):
 	pk = serializers.Field()
 	name = serializers.CharField(required=True, max_length=50)
-	project_id = serializers.IntegerField(required=True)
+	project_id = serializers.WritableField(source='project.id', required=True)
 	is_current = serializers.BooleanField(default=False)
 	description = serializers.CharField(required=False)
 	
@@ -52,12 +52,13 @@ class project_status_serializer(serializers.Serializer):
 		if instance is not None:
 			instance.pk = attrs.get('pk', instance.pk)
 			instance.name = attrs.get('name', instance.name)
-			project_id = attrs.get('project_id', None)
-			if project_id is not None:
+			input_project_id = attrs.get('project_id', None)
+			if input_project_id is not None:
 				instance.project = project.objects.get(project_id)
 			instance.is_current = attrs.get('is_current', instance.is_current)
 			instance.description = attrs.get('description', instance.description)
 			return instance
+		
 		return project_status(**attrs)
 	
 		
