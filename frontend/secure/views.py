@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.views import generic
 from django.core import serializers
-from lib.frontendlib import hmac_auth
-import requests
+# from lib.frontendlib import hmac_auth
+# import requests
 
 class user_view(generic.ListView):
     template_name = 'userlist.html'
