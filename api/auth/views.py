@@ -19,7 +19,7 @@ class site_client(ListModelMixin,
 
 	Support pagination.
 	'''
-	authentication_classes = (api_auth, )
+	# authentication_classes = (api_auth, )
 	# permission_classes((api_permission,)
 	queryset = site_client_model.objects.all()
 	serializer_class = api_auth_serializer

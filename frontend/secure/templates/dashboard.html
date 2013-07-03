@@ -1,6 +1,6 @@
 {% if siteclient_list %}
 	{% for sc in siteclient_list.results %}
-		<li>{{ sc.client_id }} : {{ sc.security_key }}</li>
+		<li>{{ sc.description }} : {{ sc.security_key }}</li>
 	{% endfor %}
 {% else %}
 	<p>Empty data.</p>

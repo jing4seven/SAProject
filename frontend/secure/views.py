@@ -1,8 +1,11 @@
+
+from __future__ import unicode_literals
 from django.http import HttpResponse
-# from django.views.base import TemplateView
 from django.core import serializers
 from lib.frontendlib import hmac_auth, FeTemplateView
 from django.template.loader import render_to_string
+
+
 class dashboard_view(FeTemplateView):
     '''
     Dashboard view.
