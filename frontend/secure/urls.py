@@ -4,5 +4,5 @@ from frontend.secure import views
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'SAProject.views.home', name='home'),
-	url(r'(?i)user/$', views.user_view.as_view(), name="user_view"),
+	url(r'(?i)user/$', views.dashboard_view.as_view(), name="user_view"),
 )

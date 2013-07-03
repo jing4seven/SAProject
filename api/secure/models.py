@@ -44,7 +44,9 @@ class user(models.Model):
 		self.full_name = "%s %s" % (self.first_name, self.last_name)
 		self.password = hashtools.gen_password(vis_pwd=self.password)
 		self.date_join = timezone.now()
-		
+			
+		self.site_client = site_client_model.objects.get(client_id = self.site_client_id)
+
 		super(user, self).save(*args, **kwargs)
 
 

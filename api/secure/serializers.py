@@ -7,7 +7,7 @@ from lib import validation
 
 class user_serializer(serializers.ModelSerializer):
 	pk = serializers.Field()
-	client_id = serializers.CharField(source="get_client_id")
+	site_client_id = serializers.CharField()
 	full_name = serializers.CharField(required=False, read_only=True)
 	age = serializers.Field(source="get_age")
 	birthday = serializers.DateTimeField(required=False)
@@ -21,14 +21,14 @@ class user_serializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = user
-		fields = ('pk', 'client_id','full_name', 'username', 'password', \
+		fields = ('pk', 'site_client_id','full_name', 'username', 'password', \
 			'first_name', 'last_name', 'disable', 'age', 'birthday',  'last_login',\
 			 'is_supperuser', 'is_stuff', 'update_time', 'last_edited_by')
 		ordering = ('-last_join', )
 
 	def restore_object(self, attrs, instance=None):
 		if instance is not None:
-			instance.client_id = attrs.get('client_id', instance.client_id)
+			instance.site_client_id = attrs.get('site_client_id', instance.site_client_id)
 			instance.full_name = attrs.get('full_name', instance.full_name)
 			instance.username = attrs.get('username', instance.username)
 			instance.password = attrs.get('password', instance.password)
