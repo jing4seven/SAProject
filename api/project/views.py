@@ -3,8 +3,9 @@ from rest_framework import mixins
 
 
 from api.secure.models import user
-from .models import project, project_status, release
-from .serializers import project_serializer, project_status_serializer, release_serializer
+from .models import project, project_status, release, release_status
+from .serializers import project_serializer, project_status_serializer, release_serializer, \
+                         release_status_serializer
 
 
 class projects_view(generics.GenericAPIView,
@@ -31,8 +32,6 @@ class projects_view(generics.GenericAPIView,
                 return project.objects.get_empty_query_set()
                 
         return project.objects.all()
-        
-    
 
 class project_view(generics.GenericAPIView,
                    mixins.CreateModelMixin,
@@ -163,7 +162,6 @@ class releases_view(generics.GenericAPIView,
                 
         return release.objects.all()
     
-    
 class release_view(generics.GenericAPIView,
                    mixins.CreateModelMixin,
                    mixins.UpdateModelMixin,
@@ -203,4 +201,74 @@ class release_view(generics.GenericAPIView,
             self.kwargs['pk'] = release_id  
                
         return self.destroy(request)
+
+class release_status_list_view(generics.GenericAPIView,
+                               mixins.ListModelMixin,
+                               mixins.CreateModelMixin):
+    queryset = release_status.objects.all()
+    serializer_class = release_status_serializer
+    
+    def get(self, request, release_id):
+        if release_id > 0:
+            self.kwargs['release.pk'] = release_id
+            
+        return self.list(request)
+    
+    def post(self, request, release_id):
+        if release_id > 0:
+            self.kwargs['release.pk'] = release_id
+            
+        return self.create(request)
+    
+    def get_queryset(self):
+        if 'release.pk' in self.kwargs:
+            try:
+                input_release = release.objects.get(pk=self.kwargs['release.pk'])
+                return release_status.objects.filter(release=input_release)
+            except release.DoesNotExist:
+                return release_status.objects.filter(release=None)
+            
+        return release_status.objects.all()
+    
+class release_status_detail_view(generics.GenericAPIView,
+                                 mixins.CreateModelMixin,
+                                 mixins.UpdateModelMixin,
+                                 mixins.RetrieveModelMixin,
+                                 mixins.DestroyModelMixin):
+    
+    queryset = release_status.objects.all()
+    serializer_class = release_status_serializer
+    
+    def get(self, request, release_status_id=0):    
+        if 'pk' not in self.kwargs:
+            self.kwargs['pk'] = release_status_id  
+            
+        return self.retrieve(request)
+    
+    def post(self, request, release_status_id=0):
+        if 'pk' not in self.kwargs:
+            self.kwargs['pk'] = release_status_id  
+            
+        if release_status_id > 0:
+            try:
+                release_status.objects.get(pk=release_status_id)
+                return self.update(request)
+            except release.DoesNotExist:
+                return self.create(request)
+                    
+        return self.create(request)
+
+    def put(self, request, release_status_id=0):
+        if 'pk' not in self.kwargs:
+            self.kwargs['pk'] = release_status_id  
+         
+        return self.update(request)
+
+    def delete(self, request, release_status_id=0):
+        if 'pk' not in self.kwargs:
+            self.kwargs['pk'] = release_status_id  
+         
+        return self.destroy(request)
+    
+    
     

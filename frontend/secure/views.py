@@ -7,7 +7,6 @@ class dashboard_view(FeTemplateView):
     '''
     Dashboard view.
     '''
-
     template_name = 'dashboard.html'
     def get(self, request, *args, **kwargs):
 

@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from api.secure.models import user
-from .models import project, project_status, release
+from .models import project, project_status, release, release_status
 
 
 class project_serializer(serializers.Serializer):
@@ -87,4 +87,28 @@ class release_serializer(serializers.Serializer):
 			return instance
 		
 		return release(**attrs)
+
+
+class release_status_serializer(serializers.Serializer):
+	pk = serializers.Field()
+	name = serializers.CharField(required=True, max_length=50)
+	release_id = serializers.IntegerField(required=True)
+	is_current = serializers.BooleanField(default=False)
+	description = serializers.CharField(required=False)
+	
+	class Meta:
+		model = release_status
+		fields = ('pk', 'name', 'release_id', 'is_current', 'description')	
 		
+	def restore_object(self, attrs, instance=None):
+		if instance is not None:
+			instance.pk = attrs.get('pk', instance.pk)
+			instance.name = attrs.get('name', instance.name)
+			input_release_id = attrs.get('release_id', None)
+			if input_release_id is not None:
+				instance.release = release.objects.get(pk=input_release_id)
+			instance.is_current = attrs.get('is_current', instance.is_current)
+			instance.description = attrs.get('description', instance.description)
+			return instance
+		
+		return release_status(**attrs)
