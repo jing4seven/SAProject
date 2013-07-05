@@ -60,10 +60,11 @@ class FeTemplateView(TemplateView):
 		self.req_session = self.api_request_session()
 
 	def get_api_data(self, username, url, method, data, obj_name):
-		self.req_session.auth = hmac_auth('none', url, method, data)
-
+		self.req_session.auth = hmac_auth(username, url, method, data)
+		
 		resp = self.req_session.get(url)
 		
 		if resp.status_code == requests.codes.ok:
 			self.context_data[obj_name] = resp.json()
 			self.context = Context(self.context_data)
+		return resp.text

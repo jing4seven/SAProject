@@ -5,6 +5,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin,\
  UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.response import Response
 from api.auth.authentication import api_auth
+from api.auth.permissions import api_permission
 from api.auth.models import site_client as site_client_model
 from api.auth.serializers import api_auth_serializer
 
@@ -19,8 +20,8 @@ class site_client(ListModelMixin,
 
 	Support pagination.
 	'''
-	# authentication_classes = (api_auth, )
-	# permission_classes((api_permission,)
+	authentication_classes = (api_auth, )
+	# permission_classes= (api_permission,)
 	queryset = site_client_model.objects.all()
 	serializer_class = api_auth_serializer
 
@@ -61,3 +62,6 @@ class site_client(ListModelMixin,
 			queryset = site_client_model.objects.get(pk=pk)
 		except site_client_model.DoesNotExist:
 			raise Http404
+
+	def __name__(self):
+		return 

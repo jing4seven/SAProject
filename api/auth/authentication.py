@@ -28,7 +28,7 @@ class api_auth(authentication.BaseAuthentication):
 		if len(string.strip(auth_header)) == 0:
 			raise exceptions.NotAuthenticated()
 
-		auth_matcher = re.match(r'^ApiKey ([a-zA-Z|0-9]+):([a-zA-Z|0-9]+)$', auth_header)	
+		auth_matcher = re.match(r'^ApiKey ([a-zA-Z|0-9|\_]+):([a-zA-Z|0-9]+)$', auth_header)	
 
 		if not auth_matcher:
 			raise exceptions.AuthenticationFailed()
@@ -39,7 +39,7 @@ class api_auth(authentication.BaseAuthentication):
 			if username == 'none':
 				client_id = self._get_client_id(request)
 			else:
-				client_id = user.objects.get(username=username).client_id
+				client_id = user.objects.get(username=username).site_client.client_id
 
 			security_key = site_client_model.objects.get(client_id=client_id).security_key
 		except:
@@ -64,7 +64,8 @@ class api_auth(authentication.BaseAuthentication):
 		if str(hmac_key.hexdigest()) != signature:
 			raise exceptions.AuthenticationFailed("Signature error!")
 
-		username = username == 'none' and None or username
+		if username == 'none':
+			username = None
 
 		return (username, None)
 

@@ -13,6 +13,6 @@ class dashboard_view(FeTemplateView):
     template_name = 'dashboard.html'
     def get(self, request, *args, **kwargs):
 
-        self.get_api_data('webuser', 'http://localhost:8080/api/siteclient/', \
+        self.get_api_data('webuser_dev', 'http://localhost:8080/api/siteclient/', \
             'GET', '', 'siteclient_list')
         return self.render_to_response(self.context)

@@ -50,15 +50,15 @@ class user(models.Model):
 		super(user, self).save(*args, **kwargs)
 
 
-# class AnonymousUser(object):
-#     id = None
-#     pk = None
-#     username = ''
-#     is_staff = False
-#     is_active = False
-#     is_superuser = False
-#     _groups = EmptyManager()
-#     _user_permissions = EmptyManager()
+class AnonymousUser(object):
+    id = None
+    pk = None 
+    username = ''
+    is_staff = False
+    is_active = False
+    is_superuser = False
+    # _groups = EmptyManager()
+    # _user_permissions = EmptyManager()
 
 
 class endpoint(models.Model):
