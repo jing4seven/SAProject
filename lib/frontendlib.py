@@ -58,12 +58,22 @@ class FeTemplateView(TemplateView):
 
 	def __init__(self, *args, **kwargs):
 		self.req_session = self.api_request_session()
+		self.context = self.__get_default_context__()
 
 	def get_api_data(self, username, url, method, data, obj_name):
 		self.req_session.auth = hmac_auth('none', url, method, data)
 
 		resp = self.req_session.get(url)
 		
-		if resp.status_code == requests.codes.ok:
-			self.context_data[obj_name] = resp.json()
-			self.context = Context(self.context_data)
+		if resp.status_code == requests.codes.ok:			
+			self.context_data[obj_name] = resp.json()		
+			self.context.update(self.context_data)						
+				
+				
+	def __get_default_context__(self):
+		default_context_data = Context()
+		default_context_data['ENVIRONMENT'] = settings.FRONT_END['ENVIRONMENT']
+		return default_context_data
+				
+				
+				
