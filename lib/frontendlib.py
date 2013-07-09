@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 import requests # http://www.python-requests.org
 from requests.auth import AuthBase
 from requests.sessions import Session
+from requests.utils import get_environ_proxies
 from lib.wrapper import singleton
 
 class hmac_auth(AuthBase):
@@ -62,7 +63,7 @@ class FeTemplateView(TemplateView):
 
 	def get_api_data(self, username, url, method, data, obj_name):
 		self.req_session.auth = hmac_auth('none', url, method, data)
-
+		
 		resp = self.req_session.get(url)
 		
 		if resp.status_code == requests.codes.ok:			

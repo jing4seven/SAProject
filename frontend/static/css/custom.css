@@ -37,5 +37,27 @@
  }
 
  .main-content {
- 	
+ 	position: fixed;
+	bottom: 20px;
+	left: 0;
+	right: 0;
+	top: 60px;
+	width: 100%;
+ }
+
+ .left-column {
+ 	float: left;
+	width: 20%;
+	height: 100%;
+	border-right: 1px solid #c4c4c4;
+ }
+
+ .right-column {
+ 	float: left;
+	width: 79%;
+	height: 100%;	
+ }
+
+ .widget-container {
+ 	margin: 5px 2px 5px 2px;
  }
