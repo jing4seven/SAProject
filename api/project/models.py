@@ -78,6 +78,26 @@ class work_item_group(models.Model):
 		db_table = 'sa_t_work_item_groups'
 		
 
+class work_item(models.Model):
+	work_item_group = models.ForeignKey(work_item_group, blank=False)
+	release = models.ForeignKey(release, blank=True, null=True)
+	parent = models.ForeignKey('self', null=True)
+	name = models.CharField(max_length=250, blank=False)
+	description = models.TextField(blank=True, null=True)
+	loe = models.IntegerField(default=0)
+	creator = models.ForeignKey(user, blank=False, null=False, related_name='creator_user_relationship')
+	assignee = models.ForeignKey(user, blank=True, null=True, related_name='assignee_user_relationship')
+	requestor = models.ForeignKey(user, blank=True, null=True, related_name='requestor_user_relationship')
+	time_logged = models.IntegerField(default=0)
+	update_time = models.DateTimeField(default=timezone.now(), blank=True)
+	last_edited_by = models.CharField(max_length=250, blank=True)
+	
+	def __unicode__(self):
+		return self.name
+	
+	class Meta:
+		db_table = 'sa_t_work_items'	
+	
 
 # class work_item_group(models.Model):
 # 	project = models.ForeignKey('project')

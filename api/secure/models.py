@@ -102,6 +102,9 @@ class role_permission(models.Model):
 	class Meta:
 		db_table = 'sa_t_role_permission'
 
+	def get_anonymous_role_name(self):
+		return 'AYS'
+
 
 class project_user_role(models.Model):
 	project = models.ForeignKey('project.project')

@@ -8,6 +8,26 @@ from api.auth.authentication import api_auth
 from api.auth.permissions import api_permission
 from api.auth.models import site_client as site_client_model
 from api.auth.serializers import api_auth_serializer
+from django.utils import six
+
+class site_clients(ListModelMixin, GenericAPIView):
+	# authentication_classes = (api_auth, )
+	# permission_classes= (api_permission,)
+	serializer_class = api_auth_serializer
+	queryset = site_client_model.objects.all()
+
+	def __init__(self, *args, **kwargs):
+		for key, value in six.iteritems(kwargs):
+			setattr(self, key, value)
+
+	def get(self, request, **kwargs):
+		return self.list(request)
+	
+	def _set_queryset(self, pk):
+		try:
+			queryset = site_client_model.objects.get(pk=pk)
+		except site_client_model.DoesNotExist:
+			raise Http404	
 
 class site_client(ListModelMixin, 
 				CreateModelMixin, 
@@ -20,12 +40,12 @@ class site_client(ListModelMixin,
 
 	Support pagination.
 	'''
-	authentication_classes = (api_auth, )
-	# permission_classes= (api_permission,)
+	# authentication_classes = (api_auth, )
+	permission_classes= (api_permission,)
 	queryset = site_client_model.objects.all()
 	serializer_class = api_auth_serializer
 
-	def get(self, request, pk=0, format='json'):
+	def get(self, request, pk=0, format='json', *args, **kwargs):
 		'''
 		Get site client list or one specified one record.
 		'''
