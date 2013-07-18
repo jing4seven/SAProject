@@ -1,87 +1,79 @@
 from django.http import Http404
-from rest_framework import exceptions
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, ListModelMixin,\
  UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin
-from rest_framework.response import Response
-from api.auth.authentication import api_auth
 from api.auth.permissions import api_permission
 from api.auth.models import site_client as site_client_model
 from api.auth.serializers import api_auth_serializer
-from django.utils import six
 
-class site_clients(ListModelMixin, GenericAPIView):
-	# authentication_classes = (api_auth, )
-	# permission_classes= (api_permission,)
-	serializer_class = api_auth_serializer
-	queryset = site_client_model.objects.all()
+class site_clients_view(GenericAPIView, ListModelMixin):
+    '''
+    Site Client View for handle Get request for list result.
 
-	def __init__(self, *args, **kwargs):
-		for key, value in six.iteritems(kwargs):
-			setattr(self, key, value)
+    Support pagination.
+    '''
+    # authentication_classes = (api_auth, )
+    # permission_classes= (api_permission,)
+    serializer_class = api_auth_serializer
+    queryset = site_client_model.objects.all()
 
-	def get(self, request, **kwargs):
-		return self.list(request)
-	
-	def _set_queryset(self, pk):
-		try:
-			queryset = site_client_model.objects.get(pk=pk)
-		except site_client_model.DoesNotExist:
-			raise Http404	
+    def get(self, request, **kwargs):
+        return self.list(request)
 
-class site_client(ListModelMixin, 
-				CreateModelMixin, 
-				GenericAPIView, 
-				UpdateModelMixin, 
-				RetrieveModelMixin,
-				DestroyModelMixin):
-	'''
-	Site Client View for handle CRUD for site client.
+    def _set_queryset(self, pk):
+        try:
+            queryset = site_client_model.objects.get(pk=pk)
+        except site_client_model.DoesNotExist:
+            raise Http404
 
-	Support pagination.
-	'''
-	# authentication_classes = (api_auth, )
-	permission_classes= (api_permission,)
-	queryset = site_client_model.objects.all()
-	serializer_class = api_auth_serializer
 
-	def get(self, request, pk=0, format='json', *args, **kwargs):
-		'''
-		Get site client list or one specified one record.
-		'''
-		if not pk==0:
-			self._set_queryset(pk)
-			return self.retrieve(request, pk, format=format)
-		else:
-			return self.list(request)
+class site_client_view(GenericAPIView,
+                CreateModelMixin,
+                UpdateModelMixin,
+                RetrieveModelMixin,
+                DestroyModelMixin):
+    '''
+    Site Client View for handle CRUD for site client.
+    '''
+    # authentication_classes = (api_auth, )
+    #permission_classes= (api_permission,)
+    queryset = site_client_model.objects.all()
+    serializer_class = api_auth_serializer
 
-	def post(self, request, format='json'):
-		'''
-		Create a new site client.
-		'''
-		return self.create(request, format=format)
+    def get(self, request, pk=None, format='json', *args, **kwargs):
+        '''
+        Get site client list or one specified one record.
+        '''
+        if not pk:
+            self._set_queryset(pk)
+            return self.retrieve(request, pk, format=format)
+        else:
+            return self.retrieve(request)
 
-	def put(self, request, pk=0, format='json'):
-		'''
-		Update a specified site client.
-		'''
-		self._set_queryset(pk)
+    def post(self, request, format='json'):
+        '''
+        Create a new site client.
+        '''
+        return self.create(request, format=format)
 
-		return self.update(request, format=format)
+    def put(self, request, pk=0, format='json'):
+        '''
+        Update a specified site client.
+        '''
+        self._set_queryset(pk)
 
-	def delete(self, request, pk=0, format='json'):
-		'''
-		Delete one object.
-		'''
-		self._set_queryset(pk)
+        return self.update(request, format=format)
 
-		return self.destroy(request, format=format)
+    def delete(self, request, pk=0, format='json'):
+        '''
+        Delete one object.
+        '''
+        self._set_queryset(pk)
 
-	def _set_queryset(self, pk):
-		try:
-			queryset = site_client_model.objects.get(pk=pk)
-		except site_client_model.DoesNotExist:
-			raise Http404
+        return self.destroy(request, format=format)
 
-	def __name__(self):
-		return 
+    def _set_queryset(self, pk):
+        try:
+            queryset = site_client_model.objects.get(pk=pk)
+        except site_client_model.DoesNotExist:
+            raise Http404
