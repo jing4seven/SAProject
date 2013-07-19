@@ -110,7 +110,7 @@ def main():
     raw_password = 'Pa88word'
     password = hashers.make_password(raw_password)
     update_time = datetime.now()
-    last_login = None
+    last_login = datetime.now()
     date_joined = datetime.now()
 
     i=0

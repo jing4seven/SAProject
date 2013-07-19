@@ -22,4 +22,4 @@ def get_api_data(username, url, method=HTTP_METHOD_GET, data=dict()):
     if response.status_code == requests.codes.ok:            
         return response.json()   
     
-    raise requests.exceptions.HTTPError()     
+    raise requests.exceptions.RequestException(str.format("unable to fetch data from {0}. and response status {1}", url, response.status_code))     
