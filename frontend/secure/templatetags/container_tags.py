@@ -19,8 +19,7 @@ class WidgetNode(Node):
         if self.access_uri in context:
             self.access_uri = context[self.access_uri]
             
-        context.update({'widget_id': self.widget_id, 'access_uri': self.access_uri})
-        print context
+        context.update({'widget_id': self.widget_id, 'access_uri': self.access_uri})        
         return t.render(context)
 
 @register.tag

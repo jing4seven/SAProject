@@ -34,6 +34,6 @@ class hmac_auth(AuthBase):
         security_key = settings.FRONT_END['CLIENT_SECURITY_KEY']
         signature = hmac.new(security_key, hmac_message, hashlib.sha1).hexdigest() 
         r.headers['AUTHORIZATION'] = 'ApiKey %s:%s' % (self.username, signature)
-
+        
         return r
 
