@@ -28,6 +28,8 @@ class dashboard_view(FeTemplateView):
                          release_tree_url=project_releases_fe_url)
         
         self.context.update(variables)        
+
+        self.context.update(variables)
         return self.render_to_response(self.context)
 
 class project_tree_view(FeTemplateView):

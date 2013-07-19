@@ -84,7 +84,7 @@ STATIC_ROOT = config.get('statics', 'STATIC_ROOT')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/' #config.get('statics', 'STATIC_URL')
+STATIC_URL = '/static/' # config.get('statics', 'STATIC_URL')
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -98,23 +98,19 @@ STATICFILES_FINDERS = (
 # Put strings here, like "/home/html/static" or "C:/www/django/static".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-#STATICFILES_DIRS = tuple(config.get('statics', 'STATICFILES_DIRS').split())
 STATICFILES_DIRS = (config.get('statics', 'STATICFILES_DIRS'),)
 
 # List of callables that know how to import templates from various sources.
 # TEMPLATE_LOADERS = tuple(config.get('templates', 'TEMPLATE_LOADERS').split())
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.app_directories.Loader'
 )
 
 # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = tuple(config.get('templates', 'TEMPLATE_DIRS').split())
-#TEMPLATE_DIRS = (
-#    'D:/www/SAProject/templates/',
-#)
 
 ROOT_URLCONF = 'SAProject.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
@@ -124,11 +120,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',    
+    'lib.frontend.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'lib.frontend.middleware.AuthenticationMiddleware',
 )
 
 INSTALLED_APPS = (
@@ -182,16 +177,20 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'api.auth.authentication.api_auth',
+        'api.auth.authentication.api_auth',
     ),
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    # ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'PAGINATE_BY': 20,
     'PAGINATE_BY_PARAM' : 'page_size',
+    # Authentication
+    'UNAUTHENTICATED_USER': 'api.secure.models.AnonymousUser',
 }
 
 # Override settings in global_settings.py
+AUTH_USER_MODEL='api.secure.models.user'
+ANONYMOUS_ROLE_NAME = 'AYS'
 
 # Only for front-end
 FRONT_END = {
