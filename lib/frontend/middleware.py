@@ -13,15 +13,15 @@ class AuthenticationMiddleware(object):
     def process_request(self, request):
         username = None
         
-        if hasattr(request, 'session'):
-            if hasattr(request.session, AUTH_USER_SESSION_KEY):
-                username = request.session[AUTH_USER_SESSION_KEY]
+#         if hasattr(request, 'session'):
+#             if hasattr(request.session, AUTH_USER_SESSION_KEY):
+#                 username = request.session[AUTH_USER_SESSION_KEY]
             
         if username is None and hasattr(request, 'username'):
             username = getattr(request, 'username')
             
         if settings.FRONT_END['ALLOW_GUEST'] and username is None:
-            request.user = dict(username='guest', user_id=0)
+            request.user = dict(username='userpo', user_id=1)
             
         if not hasattr(request, 'user'):
             api_url = get_format_urls(API_USER_GET, URLS_TYPE_API, 

@@ -2,14 +2,14 @@
 from . import URLS_TYPE_API, URLS_TYPE_FRENTEND
 
 _api_urls = {
-    'USER_GET': '/api/user/{username}/',
-    'USER_PROJECTS_GET': '/api/projects/{user_id}/',    
-    'PROJECT_RELEASES_GET': '/api/project/{project_id}/releases/',
+    'USER_GET': '/api/secure/user/{username}',
+    'USER_PROJECTS_GET': '/api/owner/{owner-username}/projects',    
+    'PROJECT_RELEASES_GET': '/api/owner/{owner-username}/project/{project-name}/releases',
 }
 
 _fe_urls = {
     'USER_PROJECTS_GET': '/secure/{username}/projects/',
-    'PROJECT_RELEASES_GET': '/secure/{username}/project/{project_id}/releases/',
+    'PROJECT_RELEASES_GET': '/secure/{username}/project/{project-name}/releases/',
 }
 
 def get_format_urls(key, url_type, **kwargs):
@@ -28,6 +28,7 @@ def get_format_urls(key, url_type, **kwargs):
 def _fill_url(url, **kwargs):
     for key, value in kwargs.iteritems():
         format_key = '{' + key + '}'
+        format_key = format_key.replace("_", "-")
         if value is not None:
             url = url.replace(format_key, str(value))
       

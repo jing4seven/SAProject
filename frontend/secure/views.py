@@ -20,7 +20,7 @@ class dashboard_view(FeTemplateView):
                                                     username=request.user['username'])
         project_releases_fe_url = urls.get_format_urls(PROJECT_RELEASES, URLS_TYPE_FRENTEND, \
                                                        username=request.user['username'], \
-                                                       project_id=0)
+                                                       project_name="")
         
         variables = dict(project_tree_id='project_tree', 
                          project_tree_url=user_projects_fe_url,
@@ -38,7 +38,7 @@ class project_tree_view(FeTemplateView):
 
     def get(self, request, *args, **kwargs):
         api_url = urls.get_format_urls(USER_PROJECTS, URLS_TYPE_API, \
-                                       user_id=request.user['user_id'])
+                                       owner_username=request.user['username'])
         self.get_data(request, api_url, HTTP_METHOD_GET, dict(), 'user_projects')
         
         return self.render_to_response(self.context)
@@ -48,10 +48,11 @@ class release_tree_view(FeTemplateView):
     template_name = 'releases_tree.html'
 
     def get(self, request, *args, **kwargs):
-        input_project_id = kwargs.get('project_id', 0) 
-        if input_project_id > 0:
+        input_project_name = kwargs.get('project_name', 0) 
+        if input_project_name > 0:
             api_url = urls.get_format_urls(PROJECT_RELEASES, URLS_TYPE_API, \
-                                           project_id=input_project_id)
+                                           owner_username=request.user['username'], \
+                                           project_name=input_project_name) 
             self.get_data(request, api_url, HTTP_METHOD_GET, dict(), 'project_releases')
         
         

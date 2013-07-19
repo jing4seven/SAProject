@@ -10,7 +10,7 @@ class project_serializer(serializers.Serializer):
 	name = serializers.CharField(required=True, max_length=50)
 	alias = serializers.CharField(required=True, max_length=250)	
 	owner_id = serializers.IntegerField(required=True)
-	#owner_username = serializers.Field(source='owner.username')
+	owner_username = serializers.Field(source='owner.username')
 	description = serializers.CharField(required=False)
 	is_private = serializers.BooleanField(default=False)
 	update_time = serializers.DateTimeField(default=timezone.now(), read_only=True)
@@ -18,8 +18,8 @@ class project_serializer(serializers.Serializer):
 	
 	class Meta:
 		model = project
-		fields = ('pk', 'name', 'alias', 'owner_id', 'description', 'is_private', 'update_time', 'last_edited_by')
-		read_only_fields =('update_time',) 
+		fields = ('pk', 'name', 'alias', 'owner_id', 'owner_username', 'description', 'is_private', 'update_time', 'last_edited_by')
+		read_only_fields =('owner_username', 'update_time',) 
 		
 	def restore_object(self, attrs, instance=None):			
 		if instance is not None:

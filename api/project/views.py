@@ -14,9 +14,9 @@ class projects_view(generics.GenericAPIView,
     queryset = project.objects.all()
     serializer_class = project_serializer
     
-    def get(self, request, owner_id=0):
-        if owner_id > 0:
-            self.kwargs['owner.pk'] = owner_id
+    def get(self, request, owner_username=None):
+        if owner_username is not None:
+            self.kwargs['owner.username'] = owner_username
             
         return self.list(request)
     
@@ -24,9 +24,9 @@ class projects_view(generics.GenericAPIView,
         return self.create(request, owner_id=owner_id)
     
     def get_queryset(self):
-        if 'owner.pk' in self.kwargs:
+        if 'owner.username' in self.kwargs:
             try:
-                owner = user.objects.get(pk=self.kwargs['owner.pk'])
+                owner = user.objects.get(username=self.kwargs['owner.username'])
                 return project.objects.filter(owner=owner)
             except user.DoesNotExist:
                 return project.objects.get_empty_query_set()
