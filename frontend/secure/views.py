@@ -15,9 +15,9 @@ class dashboard_view(FeTemplateView):
 
     def get(self, request, *args, **kwargs):
 
-        self.get_api_data('webuser', 'http://localhost:8080/api/siteclient/', \
-            'GET', '', 'siteclient_list')
-        print self.context
+        #self.get_api_data('webuser', 'http://localhost:8080/api/siteclient/', \
+            #'GET', '', 'siteclient_list')
+        #print self.context
 
         fe_url = urls.get_format_urls(USER_PROJECTS, URLS_TYPE_FRENTEND, \
                                       username=request.user['username'])
