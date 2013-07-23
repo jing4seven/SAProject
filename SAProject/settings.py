@@ -3,7 +3,7 @@ from ConfigParser import RawConfigParser
 
 # Load config file
 config = RawConfigParser()
-config.read("D:\saproject_workspace\settings.ini")
+config.read("/home/jing/envs/conf/settings.ini")
 
 # Debug
 DEBUG = config.getboolean('debug','DEBUG')
@@ -33,7 +33,7 @@ DATABASES = {
         'PORT': DATABASE_PORT,
         'OPTIONS': {
             'charset': 'utf8',
-            'use_unicode': True, 
+            'use_unicode': True,
         },
     }
 }
@@ -112,6 +112,18 @@ USE_TZ = True
 # Don't forget to use absolute paths, not relative paths.
 #TEMPLATE_DIRS = tuple(config.get('templates', 'TEMPLATE_DIRS').split())
 
+# cache config
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 86400, # unit is seconds, 60*60*24 = 86400 = 1 day
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
+
 ROOT_URLCONF = 'SAProject.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'SAProject.wsgi.application'
@@ -177,6 +189,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'api.auth.authentication.api_auth',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'api.auth.permissions.api_permission',
+    ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
@@ -189,3 +204,10 @@ REST_FRAMEWORK = {
 # Override settings in global_settings.py
 AUTH_USER_MODEL='api.secure.models.user'
 ANONYMOUS_ROLE_NAME = 'AYS'
+GPPD = {
+    'GET':8,
+    'POST':4,
+    'PUT':2,
+    'DELETE':1
+}
+PERMISSIONS_CACHED_KEY = 'permissions_by_role'

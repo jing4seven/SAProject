@@ -28,42 +28,6 @@ class project_manager(models.Manager):
 
         return tuple(username_list)
 
-    def get_project_roles_by_username(self, username):
-        from api.secure.models import project_user_role, user, role
-        user_ins = user.objects.get_by_natural_key(username)
-        pur_ins_list = project_user_role.objects.filter(project=self, user=user_ins)
-        role_list = []
-        for pur in pur_ins_list:
-            role_list.append(pur.role.name)
-
-        # everybody all has anonymous permissions.
-        anon_role_name = role(name=settings.ANONYMOUS_ROLE_NAME)
-        role_list.append(anon_role_name)
-
-        return tuple(role_list)
-
-    def get_permissions_by_username(self, username):
-        from api.secure.models import project_user_role, user
-        user_ins = user.objects.get_by_natural_key(username)
-        pur_ins_list = project_user_role.objects.filter(project=self, user=user_ins)
-        perm_list = []
-        for pur in pur_ins_list:
-            perm_list.append(pur.Permission)
-
-        pur_ins_list = self.get_anonymous_permissions()
-        for pur in pur_ins_list:
-            perm_list.append(pur.Permission)
-
-        return tuple(set(perm_list))
-
-    def get_anonymous_permissions(self):
-        from api.secure.models import project_user_role, user,role
-        # everybody all has anonymous permissions.
-        anon_role_name = role(name=settings.ANONYMOUS_ROLE_NAME)
-        user_ins = user.objects.get_by_natural_key(anon_role_name)
-        pur_ins_list = project_user_role.objects.filter(project=self, user=user_ins)
-        return pur_ins_list
-
 
 class project(models.Model):
     name = models.CharField("project short name use for navigation", max_length=50)

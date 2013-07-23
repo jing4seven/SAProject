@@ -4,7 +4,7 @@ import hashlib
 import string
 from rest_framework import authentication, exceptions
 from api.auth.models import site_client as site_client_model
-from api.secure.models import user
+from api.secure.models import user as user_model
 
 class api_auth(authentication.BaseAuthentication):
     '''
@@ -39,7 +39,7 @@ class api_auth(authentication.BaseAuthentication):
             if username == 'none':
                 client_id = self._get_client_id(request)
             else:
-                client_id = user.objects.get(username=username).site_client.client_id
+                client_id = user_model.objects.get(username=username).site_client.client_id
 
             security_key = site_client_model.objects.get(client_id=client_id).security_key
         except:
@@ -65,9 +65,11 @@ class api_auth(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Signature error!")
 
         if username == 'none':
-            username = None
+            user = None
+        else:
+            user = user_model.objects.get(username=username)
 
-        return (username, None)
+        return (user, None)
 
     def authenticate_header(self, request):
         return None
