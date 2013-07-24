@@ -80,7 +80,7 @@ def main():
 
     # Script for Roles
     tables = excel_table_byname(file=file_name, colnameindex=1, by_name="Roles")
-    outputfile.writelines('USE saproject\n')
+    outputfile.writelines('USE saproject;\n')
     outputfile.writelines("# Roles\n")
     for row in tables:
         if re.match(r'^([A-Z| ]{2,8})$', row['Project Role']):

@@ -20,8 +20,8 @@ class projects_view(generics.GenericAPIView,
             
         return self.list(request)
     
-    def post(self, request, owner_id=0):        
-        return self.create(request, owner_id=owner_id)
+    # def post(self, request, owner_username=0):        
+    #     return self.create(request, owner_username=owner_username)
     
     def get_queryset(self):
         if 'owner.username' in self.kwargs:
@@ -140,22 +140,24 @@ class releases_view(generics.GenericAPIView,
     queryset = release.objects.all()
     serializer_class = release_serializer
     
-    def get(self, request, project_id=0):
-        if project_id > 0:
-            self.kwargs['project.pk'] = project_id
-            
+    def get(self, request, owner_username=None, project_name=None):
+        if owner_username is not None:
+            self.kwargs['owner.username'] = owner_username
+        if project_name is not None:
+            self.kwargs['project.name'] = project_name
         return self.list(request)
 
-    def post(self, request, project_id=0):   
-        if project_id > 0:
-            self.kwargs['project.pk'] = project_id
+    # def post(self, request, project_id=0):   
+    #     if project_id > 0:
+    #         self.kwargs['project.pk'] = project_id
              
-        return self.create(request)
+    #     return self.create(request)
     
     def get_queryset(self):
-        if 'project.pk' in self.kwargs:
+        if self.kwargs.has_key('project.name') and self.kwargs.has_key('owner.username'):
             try:
-                input_project = project.objects.get(pk=self.kwargs['project.pk'])
+                input_owner = user.objects.get(username=self.kwargs['owner.username'])
+                input_project = project.objects.get(name=self.kwargs['project.name'], owner=input_owner)
                 return release.objects.filter(project=input_project)
             except project.DoesNotExist:
                 return release.objects.get_empty_query_set()
