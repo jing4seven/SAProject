@@ -288,26 +288,6 @@ class permission(models.Model):
     class Meta:
         db_table = 'sa_t_permission'
 
-    def get_anonymous_permissions(self):
-        from api.secure.models import role_permission, role
-        # everybody all has anonymous permissions.
-        anon_role = role(name=settings.ANONYMOUS_ROLE_NAME)
-        rp_ins_list = role_permission.objects.filter(role=anon_role)
-        perm_list = []
-        for rp in rp_ins_list:
-            perm_list.append(rp.permission)
-
-        return self.__get_permissions_by_perm_ins(perm_list)
-
-    def __get_permissions_by_perm_ins(self, perm_ins_list):
-        result_list = []
-        for perm in perm_ins_list:
-            temp_dict = dict()
-            temp_dict['codename'] = perm.endpoint.codename
-            temp_dict['GPPD'] = perm.GPPD
-            result_list.append(temp_dict)
-
-        return tuple(set(result_list))
 
 
 #class role_manager(models.Manager):
