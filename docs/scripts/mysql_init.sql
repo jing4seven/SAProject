@@ -1,4 +1,4 @@
-USE saproject;
+USE saproject
 # Roles
 INSERT INTO sa_t_role (`name`, enable, description) VALUES ("BA", True, "Business Analysis");
 SET @BA_pk=@@IDENTITY;
@@ -24,20 +24,44 @@ INSERT INTO sa_t_role (`name`, enable, description) VALUES ("STU", True, "Stuff 
 SET @STU_pk=@@IDENTITY;
 
  # Site Client
-INSERT INTO sa_t_site_client (`name`, description, `client_id`, `security_key`, `scope`, `enable`,created_time) VALUES ("frontend", "That's a frontend", "U11hRx68gSQkdhmEqo4YIGrrV8zJaCu3H5q3UKU17dI", "VTExaFJ4NjhnU1FrZGhtRXFvNFlJR3JyVjh6SmFDdTNINXEzVUtVMTdkSQ", "all", True, "2013-07-22 10:33:14.999000" );
+INSERT INTO sa_t_site_client (`name`, description, `client_id`, `security_key`, `scope`, `enable`,created_time) VALUES ("frontend", "That's a frontend", "U11hRx68gSQkdhmEqo4YIGrrV8zJaCu3H5q3UKU17dI", "VTExaFJ4NjhnU1FrZGhtRXFvNFlJR3JyVjh6SmFDdTNINXEzVUtVMTdkSQ", "all", True, "2013-07-23 16:53:55.776000" );
 SET @site_client_id=@@IDENTITY;
 
  # Users
-INSERT INTO sa_t_user (`username`,`password`, last_login, first_name, last_name, email, is_staff, is_active, date_joined, site_client_id, update_time, last_edited_by, birthday) VALUES ("userpo", "pbkdf2_sha256$10000$xAj4T44sD3J2$mVMAuvzGa8Tz/tgfCIrjIWySD7RczWIrX7cBPQhvwe0=", "2013-07-22 10:33:16.079000", "userpo", "XIAO", "test0@test.com", False, True, "2013-07-22 10:33:16.079000", @site_client_id, "2013-07-22 10:33:16.078000", "admin", "1983-06-15T00:00");
+INSERT INTO sa_t_user (`username`,`password`, last_login, first_name, last_name, email, is_staff, is_active, date_joined, site_client_id, update_time, last_edited_by, birthday) VALUES ("userpo", "pbkdf2_sha256$10000$KSLx4MIdbtT1$95+heJFruz+R7luq6aKt2CI5NUtozOMrUj9enEKz5/s=", "2013-07-23 16:53:56.579000", "userpo", "XIAO", "test0@test.com", False, True, "2013-07-23 16:53:56.579000", @site_client_id, "2013-07-23 16:53:56.579000", "admin", "1983-06-15T00:00");
 SET @userpo_pk=@@IDENTITY;
-INSERT INTO sa_t_user (`username`,`password`, last_login, first_name, last_name, email, is_staff, is_active, date_joined, site_client_id, update_time, last_edited_by, birthday) VALUES ("userdev", "pbkdf2_sha256$10000$xAj4T44sD3J2$mVMAuvzGa8Tz/tgfCIrjIWySD7RczWIrX7cBPQhvwe0=", "2013-07-22 10:33:16.079000", "userdev", "XIAO", "test1@test.com", False, True, "2013-07-22 10:33:16.079000", @site_client_id, "2013-07-22 10:33:16.078000", "admin", "1983-06-15T00:00");
+INSERT INTO sa_t_user (`username`,`password`, last_login, first_name, last_name, email, is_staff, is_active, date_joined, site_client_id, update_time, last_edited_by, birthday) VALUES ("userdev", "pbkdf2_sha256$10000$KSLx4MIdbtT1$95+heJFruz+R7luq6aKt2CI5NUtozOMrUj9enEKz5/s=", "2013-07-23 16:53:56.579000", "userdev", "XIAO", "test1@test.com", False, True, "2013-07-23 16:53:56.579000", @site_client_id, "2013-07-23 16:53:56.579000", "admin", "1983-06-15T00:00");
 SET @userdev_pk=@@IDENTITY;
-INSERT INTO sa_t_user (`username`,`password`, last_login, first_name, last_name, email, is_staff, is_active, date_joined, site_client_id, update_time, last_edited_by, birthday) VALUES ("userqa", "pbkdf2_sha256$10000$xAj4T44sD3J2$mVMAuvzGa8Tz/tgfCIrjIWySD7RczWIrX7cBPQhvwe0=", "2013-07-22 10:33:16.079000", "userqa", "XIAO", "test2@test.com", False, True, "2013-07-22 10:33:16.079000", @site_client_id, "2013-07-22 10:33:16.078000", "admin", "1983-06-15T00:00");
+INSERT INTO sa_t_user (`username`,`password`, last_login, first_name, last_name, email, is_staff, is_active, date_joined, site_client_id, update_time, last_edited_by, birthday) VALUES ("userqa", "pbkdf2_sha256$10000$KSLx4MIdbtT1$95+heJFruz+R7luq6aKt2CI5NUtozOMrUj9enEKz5/s=", "2013-07-23 16:53:56.579000", "userqa", "XIAO", "test2@test.com", False, True, "2013-07-23 16:53:56.579000", @site_client_id, "2013-07-23 16:53:56.579000", "admin", "1983-06-15T00:00");
 SET @userqa_pk=@@IDENTITY;
 SELECT @userpo_pk=id FROM sa_t_user WHERE `username`="userpo";
-INSERT INTO sa_t_projects (`name`, alias, owner_id, description, is_private, update_time, last_edited_by) VALUES ("ASPP", "A Sample Project Only For Test", @userpo_pk, "No Descriptions.",  False, "2013-07-22 10:33:16.079000", "admin");
+INSERT INTO sa_t_projects (`name`, alias, owner_id, description, is_private, update_time, last_edited_by) VALUES ("ASPP", "A Sample Project Only For Test", @userpo_pk, "No Descriptions.",  False, "2013-07-23 16:53:56.580000", "admin");
 
 SET @project_pk=@@IDENTITY;
+
+# Releases
+INSERT INTO sa_t_releases (`name`, project_id, description, deadline, update_time, last_edited_by) VALUES ("v01.00.00", @project_pk, "v01.00.00 release notes", "2013-09-30",  "2013-07-23 16:53:56.621000", "userpo");
+SET @release_pk=@@IDENTITY;
+INSERT INTO sa_t_releases (`name`, project_id, description, deadline, update_time, last_edited_by) VALUES ("v01.01.00", @project_pk, "v01.01.00 release notes", "2013-12-31",  "2013-07-23 16:53:56.621000", "userpo");
+SET @release_pk=@@IDENTITY;
+INSERT INTO sa_t_releases (`name`, project_id, description, deadline, update_time, last_edited_by) VALUES ("v02.00.00", @project_pk, "v02.00.00 release notes", "2014-04-30",  "2013-07-23 16:53:56.621000", "userpo");
+SET @release_pk=@@IDENTITY;
+
+# WorkItemGroup
+INSERT INTO sa_t_work_item_groups (project_id, `name`, description, importance, time_logged, initial_estimate, update_time, last_edited_by) VALUES (@project_pk, "Login Interface", "Implement the Login functions for the site", 100.0, 310.0, 480.0, "2013-07-23 16:53:56.663000", "userpo");
+SET @work_item_group_pk=@@IDENTITY;
+INSERT INTO sa_t_work_item_groups (project_id, `name`, description, importance, time_logged, initial_estimate, update_time, last_edited_by) VALUES (@project_pk, "Project Tree display", "We need a tree display diagram for the projects own by one user", 80.0, 0.0, 920.0, "2013-07-23 16:53:56.663000", "userpo");
+SET @work_item_group_pk=@@IDENTITY;
+INSERT INTO sa_t_work_item_groups (project_id, `name`, description, importance, time_logged, initial_estimate, update_time, last_edited_by) VALUES (@project_pk, "Project Edit/Add", "Project creation and edition function for specific project", 50.0, 0.0, 1480.0, "2013-07-23 16:53:56.663000", "userpo");
+SET @work_item_group_pk=@@IDENTITY;
+
+# WorkItem
+INSERT INTO sa_t_work_items (work_item_group_id, release_id, `name`, description, loe, creator_id, assignee_id, requestor_id, time_logged, update_time, last_edited_by) VALUES (@work_item_group_pk, @release_pk, "Create Login View", "Create Login View description", 480.0, @userpo_pk, @userpo_pk, @userpo_pk, 0.0, "2013-07-23 16:53:56.699000", "userpo");
+SET @work_item=@@IDENTITY;
+INSERT INTO sa_t_work_items (work_item_group_id, release_id, `name`, description, loe, creator_id, assignee_id, requestor_id, time_logged, update_time, last_edited_by) VALUES (@work_item_group_pk, @release_pk, "Create Login Pagelet", "Create Login Pagelet description", 920.0, @userpo_pk, @userpo_pk, @userpo_pk, 0.0, "2013-07-23 16:53:56.699000", "userpo");
+SET @work_item=@@IDENTITY;
+INSERT INTO sa_t_work_items (work_item_group_id, release_id, `name`, description, loe, creator_id, assignee_id, requestor_id, time_logged, update_time, last_edited_by) VALUES (@work_item_group_pk, @release_pk, "Redirect Login", "Redirect Login description", 1480.0, @userpo_pk, @userpo_pk, @userpo_pk, 0.0, "2013-07-23 16:53:56.699000", "userpo");
+SET @work_item=@@IDENTITY;
 
 # endpoint
 INSERT INTO sa_t_endpoint (`name`, codename) VALUES ("{host}/api/owner/{owner-username}/project/{project-name}/workitem/{workitem-key}/attachement/{attachement-name}", "api.project.views.workitem_attachement_view");

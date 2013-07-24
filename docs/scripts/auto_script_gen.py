@@ -128,6 +128,33 @@ def main():
 
     #outputfile.writelines('\nGO\n')
 
+    # Script for Releases
+    outputfile.writelines('\n# Releases\n')
+    tables = excel_table_byname(file=file_name, colnameindex=0, by_name="Releases")
+    for row in tables:
+      line_str = 'INSERT INTO sa_t_releases (`name`, project_id, description, deadline, update_time, last_edited_by) '\
+                 'VALUES ("%s", @project_pk, "%s", "%s",  "%s", "%s");\n' % (row["name"], row["description"], row["deadline"], datetime.now(), row["last_edited_by"])
+      outputfile.writelines(line_str)
+      outputfile.writelines('SET @release_pk=@@IDENTITY;\n')  
+
+    # Script for WorkItemGroup
+    outputfile.writelines('\n# WorkItemGroup\n')
+    tables = excel_table_byname(file=file_name, colnameindex=0, by_name="WorkItemGroup")
+    for row in tables:
+      line_str = 'INSERT INTO sa_t_work_item_groups (project_id, `name`, description, importance, time_logged, initial_estimate, update_time, last_edited_by) '\
+                 'VALUES (@project_pk, "%s", "%s", %s, %s, %s, "%s", "%s");\n' % (row["name"], row["description"], row["importance"], row["time_logged"], row["initial_estimate"], datetime.now(), row["last_edited_by"])
+      outputfile.writelines(line_str)
+      outputfile.writelines('SET @work_item_group_pk=@@IDENTITY;\n')  
+
+    # Script for WorkItem
+    outputfile.writelines('\n# WorkItem\n')
+    tables = excel_table_byname(file=file_name, colnameindex=0, by_name="WorkItem")
+    for row in tables:
+      line_str = 'INSERT INTO sa_t_work_items (work_item_group_id, release_id, `name`, description, loe, creator_id, assignee_id, requestor_id, time_logged, update_time, last_edited_by) '\
+                 'VALUES (@work_item_group_pk, @release_pk, "%s", "%s", %s, @userpo_pk, @userpo_pk, @userpo_pk, %s, "%s", "%s");\n' % (row["name"], row["description"], row["loe"], row["time_logged"], datetime.now(), row["last_edited_by"])
+      outputfile.writelines(line_str)
+      outputfile.writelines('SET @work_item=@@IDENTITY;\n')  
+
     # Script for project user role
     #outputfile.writelines('INSERT INTO sa_t_project_user_role (project_id, user_id, role_id) VALUES (@project_pk, @userpo_pk, @PO_pk);\n' )
 
