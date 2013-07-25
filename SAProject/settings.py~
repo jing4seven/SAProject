@@ -213,3 +213,10 @@ GPPD = {
     'DELETE':1
 }
 PERMISSIONS_CACHED_KEY = 'permissions_by_role'
+# Conditional Request Header Key
+REQ_TS_CHE = 'If-Modifed-Since' 
+REQ_ETY_CHE = 'If-None-Match'
+REQ_TS_CLN = 'If-Unmodified-Since'
+REQ_ETY_CLN = ''
+RSP_TS = 'Last-Modified'
+RSP_ETY = 'Etag'
