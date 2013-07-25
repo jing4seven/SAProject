@@ -8,8 +8,8 @@ class project_manager(models.Manager):
     Get single project instance by name and owner username.
     '''
     def get_by_natural_key(self, owner_username, project_name):
-        owner_id = user.objects.get_by_natural_key(owner_username).pk
-        return self.get(**{self.model.PROJECTNAME_FIELD: project_name, self.model.owner: owner_id})
+        owner = user.objects.get_by_natural_key(owner_username)
+        return self.get(name=project_name, owner=owner)
 
     def get_team_members(self):
         from api.secure.models import project_user_role

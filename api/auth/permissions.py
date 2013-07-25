@@ -97,19 +97,19 @@ class api_permission(permissions.BasePermission):
         '''
         return o.__module__ + "." + o.__class__.__name__
 
-    def __get_project_instance(owner_username, project_name):
+    def __get_project_instance(self, owner_username, project_name):
         '''
         Get project instance.
         '''
         proj_ins = None
-        try:
+        try:            
             proj_ins = project.objects.get_by_natural_key(owner_username, project_name)
         except: raise Http404
         else:
             return proj_ins
 
 
-    def __check_project_private(project_instance):
+    def __check_project_private(self, project_instance):
         '''
         Check if project is private.
 
@@ -118,7 +118,7 @@ class api_permission(permissions.BasePermission):
         return project_instance.is_private
 
 
-    def __is_team_member(project_instance,  username):
+    def __is_team_member(self, project_instance,  username):
         '''
         Check if a user is one of team member of the givn project.
         '''
@@ -132,7 +132,7 @@ class api_permission(permissions.BasePermission):
         return True
 
 
-    def __is_owner(project_instance, username):
+    def __is_owner(self, project_instance, username):
         '''
         Check if a user is the owner of the givn project.
         '''
