@@ -3,7 +3,7 @@ from ConfigParser import RawConfigParser
 
 # Load config file
 config = RawConfigParser()
-config.read("/etc/SAProject/settings.ini")
+config.read("/home/jing/envs/conf/settings.ini")
 
 # Debug
 DEBUG = config.getboolean('debug','DEBUG')
